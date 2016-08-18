@@ -47,8 +47,8 @@ func (s *server) MiaowStream(filter *kitter.Filter, stream kitter.Kitter_MiaowSt
 	channel := s.broadcaster.Listen()
 
 	for {
-		keet := <-channel
-		if err := stream.Send(&keet); err != nil {
+		miaow := <-channel
+		if err := stream.Send(&miaow); err != nil {
 			return err
 		}
 
