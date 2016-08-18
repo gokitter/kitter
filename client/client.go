@@ -58,3 +58,8 @@ func (k *KitterClient) ReadStream(callback KitterCallback) {
 		callback.NewMessage(message.Content)
 	}
 }
+
+// Close closes the connection to the server
+func (k *KitterClient) Close() {
+	k.Close()
+}
