@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -69,8 +69,4 @@ func StartRPCServer() {
 	fmt.Println("Starting server on: ", port)
 
 	rpcServer.Serve(lis)
-}
-
-func main() {
-	StartRPCServer()
 }
