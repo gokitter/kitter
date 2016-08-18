@@ -1,4 +1,4 @@
-package client
+package clientfactory
 
 import (
 	"context"
@@ -24,7 +24,7 @@ type KitterClient struct {
 }
 
 // NewKitterClient creates a new Kitter client and connets to the given server
-func NewKitterClient(server string) *KitterClient {
+func Create(server string) *KitterClient {
 	connection, err := grpc.Dial(server, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
