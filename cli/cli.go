@@ -10,27 +10,22 @@ import (
 	"google.golang.org/grpc"
 )
 
-const (
-	address     = "localhost:50051"
-	defaultName = "world"
-)
-
 func main() {
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	conn, err := grpc.Dial(os.Args[1], grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
 
-	if os.Args[1] == "server" {
-		server.StartRPCServer()
-	} else if os.Args[1] == "receive" {
+	if os.Args[2] == "server" {
+		server.StartRPCServer(os.Args[1])
+	} else if os.Args[2] == "receive" {
 		c := kitter.NewKitterClient(conn)
 		client.ReadStream(c)
 	} else {
 		c := kitter.NewKitterClient(conn)
-		client.WriteMessage(c, os.Args[1])
+		client.WriteMessage(c, os.Args[2])
 	}
 
 }

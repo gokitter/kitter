@@ -16,7 +16,7 @@ server: protocols
 	go run ./server/server.go
 
 mac_client: protocols
-	go build -o mac_client ./client/client.go
+	go build -o mac_client ./cli/cli.go
 
 ios_client: protocols
 	gomobile bind -v -target=ios -o ./apps/ios/ErrorKitteh/frameworks/mobilesdk.framework ./client
