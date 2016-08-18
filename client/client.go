@@ -19,6 +19,7 @@ type KitterCallback interface {
 // to a Kitter server
 type KitterClient struct {
 	client     kitter.KitterClient
+	callback   KitterCallback
 	connection *grpc.ClientConn
 }
 
@@ -43,6 +44,11 @@ func (k *KitterClient) WriteMessage(message string) {
 // When a new message is received the NewMessage method is called on the
 // provided callback
 func (k *KitterClient) ReadStream(callback KitterCallback) {
+	k.callback = callback
+	go k.startRead()
+}
+
+func (k *KitterClient) startRead() {
 	stream, err := k.client.MiaowStream(context.Background(), &kitter.Filter{})
 	if err != nil {
 		grpclog.Fatalf("%v.ListFeatures(_) = _, %v", k.client, err)
@@ -56,7 +62,7 @@ func (k *KitterClient) ReadStream(callback KitterCallback) {
 			grpclog.Fatalf("%v.ListFeatures(_) = _, %v", k.client, err)
 		}
 
-		callback.NewMessage(message.Content)
+		k.callback.NewMessage(message.Content)
 	}
 }
 
