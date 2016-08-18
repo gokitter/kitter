@@ -55,7 +55,7 @@ func (s *server) KeetStream(filter *kitter.Filter, stream kitter.Kitter_KeetStre
 	}
 }
 
-func main() {
+func StartRPCServer() {
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -69,4 +69,8 @@ func main() {
 	fmt.Println("Starting server on: ", port)
 
 	rpcServer.Serve(lis)
+}
+
+func main() {
+	StartRPCServer()
 }
