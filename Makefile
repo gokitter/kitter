@@ -22,4 +22,4 @@ ios_client: protocols
 	gomobile bind -v -target=ios -o ./apps/ios/ErrorKitteh/frameworks/mobilesdk.framework ./client
 
 android_client: protocols
-	gomobile bind -v -target=android -o ./apps/android/ErrorKitteh/app/libs/mobilesdk.aar ./client
+	gomobile bind -v -target=android -o ../android/mobilesdk/mobilesdk.aar ./client
