@@ -9,9 +9,9 @@ package kitter;
 // The greeter service definition.
 service Kitter {
   // Sends a greeting
-  rpc Keet(Message) returns (Error);
+  rpc Miaow(Message) returns (Error);
   
-  rpc KeetStream(Filter) returns (stream Message);
+  rpc MiaowStream(Filter) returns (stream Message);
 }
 
 // The request message containing the user's name.

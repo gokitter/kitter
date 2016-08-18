@@ -37,13 +37,13 @@ type server struct {
 }
 
 // SayHello implements helloworld.GreeterServer
-func (s *server) Keet(ctx context.Context, in *kitter.Message) (*kitter.Error, error) {
+func (s *server) Miaow(ctx context.Context, in *kitter.Message) (*kitter.Error, error) {
 	s.broadcaster.Write(*in)
 
 	return &kitter.Error{Code: -1}, nil
 }
 
-func (s *server) KeetStream(filter *kitter.Filter, stream kitter.Kitter_KeetStreamServer) error {
+func (s *server) MiaowStream(filter *kitter.Filter, stream kitter.Kitter_MiaowStreamServer) error {
 	channel := s.broadcaster.Listen()
 
 	for {
