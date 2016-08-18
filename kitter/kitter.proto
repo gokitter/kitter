@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "golanguk.kitter";
+option java_outer_classname = "KitterProto";
+
+package kitter;
+
+// The greeter service definition.
+service Kitter {
+  // Sends a greeting
+  rpc Keet(Message) returns (Error);
+  
+  rpc KeetStream(Filter) returns (stream Message);
+}
+
+// The request message containing the user's name.
+message Message {
+  string from = 1;
+  string content = 2;
+}
+
+message Filter {
+  int32 id = 1;
+}
+
+// Error encapsulates the details behind a failed request
+message Error {
+  int32 code = 1;
+  string detail = 2;
+}
