@@ -15,20 +15,29 @@ import (
 const port = ":50051"
 
 type broadcaster struct {
-	channels []chan kitter.Message
+	channels map[kitter.Kitter_MiaowStreamServer]chan kitter.Message
 }
 
 func (b *broadcaster) Write(message kitter.Message) {
 	for _, channel := range b.channels {
-		channel <- message
+		go func() {
+			channel <- message
+		}()
 	}
 }
 
-func (b *broadcaster) Listen() chan kitter.Message {
+func (b *broadcaster) Listen(stream kitter.Kitter_MiaowStreamServer) chan kitter.Message {
+	fmt.Println("Register new channel")
+
 	channel := make(chan kitter.Message)
-	b.channels = append(b.channels, channel)
+	b.channels[stream] = channel
 
 	return channel
+}
+
+func newBroadcaster() *broadcaster {
+	m := make(map[kitter.Kitter_MiaowStreamServer]chan kitter.Message)
+	return &broadcaster{channels: m}
 }
 
 // server is used to implement helloworld.GreeterServer.
@@ -44,11 +53,13 @@ func (s *server) Miaow(ctx context.Context, in *kitter.Message) (*kitter.Error, 
 }
 
 func (s *server) MiaowStream(filter *kitter.Filter, stream kitter.Kitter_MiaowStreamServer) error {
-	channel := s.broadcaster.Listen()
+	channel := s.broadcaster.Listen(stream)
 
 	for {
 		miaow := <-channel
 		if err := stream.Send(&miaow); err != nil {
+			fmt.Println("Unable to send message, deregistering channel")
+			delete(s.broadcaster.channels, stream)
 			return err
 		}
 
@@ -62,7 +73,7 @@ func StartRPCServer(location string) {
 	}
 
 	rpcServer := grpc.NewServer()
-	kitterServer := &server{broadcaster: &broadcaster{}}
+	kitterServer := &server{broadcaster: newBroadcaster()}
 
 	kitter.RegisterKitterServer(rpcServer, kitterServer)
 
